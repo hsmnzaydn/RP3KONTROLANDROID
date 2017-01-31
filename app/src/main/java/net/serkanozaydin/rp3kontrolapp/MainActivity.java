@@ -3,6 +3,7 @@ package net.serkanozaydin.rp3kontrolapp;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -24,6 +25,28 @@ Button isik_kontrol,mp3_kontrol,mp3_kontrolpause,mp3_kontrolstop,mp3_unpause,hav
         db=FirebaseDatabase.getInstance();
         final DatabaseReference dbRef=db.getReference("kontroller");//kontroller adı altındaki verileri çekmek için kullanıyoruz
 
+        dbRef.child("mp3_kontrol").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                mp3_kontrol.setText(dataSnapshot.getValue().toString());
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+        dbRef.child("isik_kontrol").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                isik_kontrol.setText(dataSnapshot.getValue().toString());
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
 
 
 
@@ -115,10 +138,13 @@ Button isik_kontrol,mp3_kontrol,mp3_kontrolpause,mp3_kontrolstop,mp3_unpause,hav
                     mp3_kontrol.setText("OFF");
                     dbRef.child("mp3_kontrol").setValue("off");
                     dbRef.child("mp3_durum").setValue("off");
+                    Toast.makeText(getApplicationContext(),"Müzik kapatıldı",Toast.LENGTH_SHORT).show();
 
                 }
                 else {
                     mp3_kontrol.setText("ON");
+                    Toast.makeText(getApplicationContext(),"Müzik başlatıldı",Toast.LENGTH_SHORT).show();
+
                     dbRef.child("mp3_kontrol").setValue("on");
                     dbRef.child("mp3_durum").setValue("off");
 
